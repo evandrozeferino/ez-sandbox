@@ -1,0 +1,4 @@
+usage: prompt_tokens=38 completion_tokens=60
+counters: prompt +38 generation +60
+MATCH: the metrics surface counts exactly what the server processed
+The prompt was 7 words. The other 29 or so tokens are the chat template, paid as prefill on every call.

@@ -1,0 +1,47 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+INFO 11-10 14:47:46 [utils.py:90] Sampling input_len from [512, 512] and output_len from [512, 512]
+Starting initial single prompt test run...
+Skipping endpoint ready check.
+Starting main benchmark run...
+Traffic request rate: inf
+Burstiness factor: 1.0 (Poisson process)
+Maximum request concurrency: 30
+  0%|          | 0/200 [00:00<?, ?it/s]  0%|          | 1/200 [00:03<11:54,  3.59s/it] 16%|█▌        | 31/200 [00:07<00:33,  5.04it/s] 30%|███       | 61/200 [00:10<00:21,  6.55it/s] 46%|████▌     | 91/200 [00:14<00:14,  7.27it/s] 60%|██████    | 121/200 [00:17<00:10,  7.69it/s] 76%|███████▌  | 151/200 [00:21<00:06,  7.93it/s] 90%|█████████ | 181/200 [00:24<00:02,  8.16it/s]100%|██████████| 200/200 [00:24<00:00,  8.01it/s]
+tip: install termplotlib and gnuplot to plot the metrics
+============ Serving Benchmark Result ============
+Successful requests:                     200       
+Failed requests:                         0         
+Maximum request concurrency:             30        
+Benchmark duration (s):                  24.96     
+Total input tokens:                      102400    
+Total generated tokens:                  102400    
+Request throughput (req/s):              8.01      
+Output token throughput (tok/s):         4101.97   
+Peak output token throughput (tok/s):    4830.00   
+Peak concurrent requests:                60.00     
+Total token throughput (tok/s):          8203.94   
+---------------Time to First Token----------------
+Mean TTFT (ms):                          253.47    
+Median TTFT (ms):                        250.37    
+P50 TTFT (ms):                           250.37    
+P95 TTFT (ms):                           365.93    
+P99 TTFT (ms):                           396.97    
+-----Time per Output Token (excl. 1st token)------
+Mean TPOT (ms):                          6.49      
+Median TPOT (ms):                        6.43      
+P50 TPOT (ms):                           6.43      
+P95 TPOT (ms):                           6.78      
+P99 TPOT (ms):                           6.82      
+---------------Inter-token Latency----------------
+Mean ITL (ms):                           6.50      
+Median ITL (ms):                         6.29      
+P50 ITL (ms):                            6.29      
+P95 ITL (ms):                            6.84      
+P99 ITL (ms):                            11.95     
+----------------End-to-end Latency----------------
+Mean E2EL (ms):                          3568.53   
+Median E2EL (ms):                        3577.68   
+P50 E2EL (ms):                           3577.68   
+P95 E2EL (ms):                           3615.35   
+P99 E2EL (ms):                           3619.01   
+==================================================

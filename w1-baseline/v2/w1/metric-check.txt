@@ -1,0 +1,14 @@
+kv_cache_usage_perc                PRESENT
+num_requests_running               PRESENT
+num_requests_waiting               PRESENT
+num_requests_waiting_by_reason     PRESENT
+num_preemptions_total              PRESENT
+prefix_cache_hits_total            PRESENT
+prefix_cache_queries_total         PRESENT
+prompt_tokens_total                PRESENT
+generation_tokens_total            PRESENT
+iteration_tokens_total             PRESENT
+time_to_first_token_seconds        PRESENT
+inter_token_latency_seconds        PRESENT
+request_queue_time_seconds         PRESENT
+cache_config_info                  PRESENT

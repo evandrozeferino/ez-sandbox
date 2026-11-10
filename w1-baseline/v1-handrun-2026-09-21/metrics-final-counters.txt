@@ -1,0 +1,18 @@
+# Partial. The full /metrics dump (metrics-final.txt in the run sheet) was never
+# captured; block 5 was done by hand and the pod is terminated. These are the
+# cumulative counters taken after the three original runs, before the reruns.
+# HELP vllm:prefix_cache_queries_total Prefix cache queries, in terms of number of queried tokens.
+# TYPE vllm:prefix_cache_queries_total counter
+vllm:prefix_cache_queries_total{engine="0",model_name="Qwen/Qwen2.5-7B-Instruct"} 947238.0
+# HELP vllm:prefix_cache_hits_total Prefix cache hits, in terms of number of cached tokens.
+# TYPE vllm:prefix_cache_hits_total counter
+vllm:prefix_cache_hits_total{engine="0",model_name="Qwen/Qwen2.5-7B-Instruct"} 124480.0
+# HELP vllm:num_preemptions_total Cumulative number of preemption from the engine.
+# TYPE vllm:num_preemptions_total counter
+vllm:num_preemptions_total{engine="0",model_name="Qwen/Qwen2.5-7B-Instruct"} 0.0
+# HELP vllm:prompt_tokens_total Number of prefill tokens processed.
+# TYPE vllm:prompt_tokens_total counter
+vllm:prompt_tokens_total{engine="0",model_name="Qwen/Qwen2.5-7B-Instruct"} 947238.0
+# HELP vllm:generation_tokens_total Number of generation tokens processed.
+# TYPE vllm:generation_tokens_total counter
+vllm:generation_tokens_total{engine="0",model_name="Qwen/Qwen2.5-7B-Instruct"} 320077.0

@@ -1,0 +1,14 @@
+before
+# HELP vllm:prompt_tokens_total Number of prefill tokens processed.
+# TYPE vllm:prompt_tokens_total counter
+vllm:prompt_tokens_total{engine="0",model_name="Qwen/Qwen2.5-7B-Instruct"} 0.0
+# HELP vllm:generation_tokens_total Number of generation tokens processed.
+# TYPE vllm:generation_tokens_total counter
+vllm:generation_tokens_total{engine="0",model_name="Qwen/Qwen2.5-7B-Instruct"} 0.0
+after
+# HELP vllm:prompt_tokens_total Number of prefill tokens processed.
+# TYPE vllm:prompt_tokens_total counter
+vllm:prompt_tokens_total{engine="0",model_name="Qwen/Qwen2.5-7B-Instruct"} 38.0
+# HELP vllm:generation_tokens_total Number of generation tokens processed.
+# TYPE vllm:generation_tokens_total counter
+vllm:generation_tokens_total{engine="0",model_name="Qwen/Qwen2.5-7B-Instruct"} 77.0

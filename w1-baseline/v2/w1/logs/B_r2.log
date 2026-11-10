@@ -1,0 +1,47 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+INFO 11-10 14:49:46 [utils.py:90] Sampling input_len from [4096, 4096] and output_len from [64, 64]
+Starting initial single prompt test run...
+Skipping endpoint ready check.
+Starting main benchmark run...
+Traffic request rate: inf
+Burstiness factor: 1.0 (Poisson process)
+Maximum request concurrency: 30
+  0%|          | 0/200 [00:00<?, ?it/s]  0%|          | 1/200 [00:03<10:50,  3.27s/it] 10%|█         | 21/200 [00:03<00:21,  8.42it/s] 14%|█▍        | 28/200 [00:03<00:16, 10.24it/s] 16%|█▋        | 33/200 [00:06<00:34,  4.78it/s] 24%|██▎       | 47/200 [00:06<00:16,  9.12it/s] 26%|██▋       | 53/200 [00:07<00:15,  9.47it/s] 28%|██▊       | 57/200 [00:07<00:14,  9.63it/s] 30%|███       | 61/200 [00:09<00:26,  5.17it/s] 40%|███▉      | 79/200 [00:09<00:10, 11.34it/s] 42%|████▏     | 84/200 [00:10<00:09, 12.68it/s] 44%|████▍     | 89/200 [00:10<00:09, 11.68it/s] 46%|████▋     | 93/200 [00:13<00:19,  5.46it/s] 54%|█████▎    | 107/200 [00:13<00:09, 10.16it/s] 56%|█████▌    | 112/200 [00:13<00:08, 10.70it/s] 58%|█████▊    | 116/200 [00:13<00:07, 10.68it/s] 60%|█████▉    | 119/200 [00:14<00:08, 10.03it/s] 61%|██████    | 122/200 [00:16<00:16,  4.85it/s] 72%|███████▏  | 143/200 [00:16<00:04, 13.17it/s] 74%|███████▍  | 148/200 [00:16<00:03, 13.22it/s] 76%|███████▌  | 152/200 [00:19<00:08,  5.56it/s] 84%|████████▎ | 167/200 [00:19<00:03, 10.19it/s] 86%|████████▌ | 172/200 [00:19<00:02, 11.08it/s] 88%|████████▊ | 176/200 [00:20<00:02, 11.04it/s] 90%|█████████ | 180/200 [00:20<00:01, 10.92it/s] 92%|█████████▏| 183/200 [00:21<00:02,  7.01it/s]100%|██████████| 200/200 [00:21<00:00,  9.12it/s]
+tip: install termplotlib and gnuplot to plot the metrics
+============ Serving Benchmark Result ============
+Successful requests:                     200       
+Failed requests:                         0         
+Maximum request concurrency:             30        
+Benchmark duration (s):                  21.92     
+Total input tokens:                      819200    
+Total generated tokens:                  12800     
+Request throughput (req/s):              9.12      
+Output token throughput (tok/s):         583.99    
+Peak output token throughput (tok/s):    1715.00   
+Peak concurrent requests:                60.00     
+Total token throughput (tok/s):          37959.17  
+---------------Time to First Token----------------
+Mean TTFT (ms):                          1397.71   
+Median TTFT (ms):                        1546.21   
+P50 TTFT (ms):                           1546.21   
+P95 TTFT (ms):                           2224.69   
+P99 TTFT (ms):                           2774.15   
+-----Time per Output Token (excl. 1st token)------
+Mean TPOT (ms):                          28.68     
+Median TPOT (ms):                        26.69     
+P50 TPOT (ms):                           26.69     
+P95 TPOT (ms):                           46.12     
+P99 TPOT (ms):                           48.96     
+---------------Inter-token Latency----------------
+Mean ITL (ms):                           29.13     
+Median ITL (ms):                         8.26      
+P50 ITL (ms):                            8.26      
+P95 ITL (ms):                            184.86    
+P99 ITL (ms):                            192.93    
+----------------End-to-end Latency----------------
+Mean E2EL (ms):                          3204.60   
+Median E2EL (ms):                        3255.73   
+P50 E2EL (ms):                           3255.73   
+P95 E2EL (ms):                           3759.99   
+P99 E2EL (ms):                           3809.59   
+==================================================
