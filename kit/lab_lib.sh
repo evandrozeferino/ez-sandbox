@@ -21,6 +21,11 @@ SETTLE="${SETTLE:-10}"          # idle seconds before every run, so gauges retur
 EVENTS="$LAB_DIR/events.tsv"
 mkdir -p "$LAB_DIR"
 
+# The load generator opens one file per connection. The default limit (1,024) capped
+# W2's A c=1024 run at 996 requests with "Too many open files". Raise it for this
+# process and every vllm bench it starts.
+ulimit -n 65536 2>/dev/null || ulimit -n "$(ulimit -Hn)" 2>/dev/null || true
+
 now_epoch() { date -u +%s.%3N; }
 now_utc()   { date -u +%H:%M:%S.%3N; }
 
@@ -32,6 +37,13 @@ event() { # kind tag detail
 }
 
 say() { printf '\n==== %s ====\n' "$*"; }
+
+explain() { # in out c n rate -> one plain sentence about the run that is starting
+  local in=$1 out=$2 c=$3 n=$4 rate=$5 how
+  if [ "$rate" = inf ]; then how="$c requests at a time, sent as fast as that allows"
+  else how="new requests at random intervals, about $rate per second on average"; fi
+  printf '                    WHAT  %s; each a %s-token prompt and a %s-token answer; %s requests in total.\n' "$how" "$in" "$out" "$n"
+}
 
 snap() { curl -s "$BASE/metrics" | grep -E "^vllm" | grep -v "_created" > "$1"; }
 
@@ -84,6 +96,19 @@ bench() {
   if stopped; then echo "STOP file present, not starting $tag. rm $LAB_DIR/STOP to resume."; return 1; fi
   if [ -e "$wdir/json/$tag.json" ]; then echo "skip $tag, result exists"; return 0; fi
 
+  # A re-run after a failure gets a new seed. The same seed sends the same prompts, which
+  # are still in the prefix cache from the failed attempt: W2 v2's A_c1024_r1 re-run hit
+  # 34% of its prompt tokens in cache. Offset by 500,000 per earlier failure, clear of
+  # every seed the runners use (all below 300,000).
+  # Counted only when this week's json dir holds a failed attempt for the tag: W1 and W2
+  # share events.tsv on one pod and reuse some tags (B_rate_r2).
+  local fails=0
+  [ -e "$wdir/json/$tag.failed.json" ] && fails=$(awk -F'\t' -v t="$tag" '$3=="FAIL" && $4==t {n++} END {print n+0}' "$EVENTS" 2>/dev/null || echo 0)
+  if [ "${fails:-0}" -gt 0 ]; then
+    echo "re-run of $tag after $fails failure(s): seed $seed -> $((seed + 500000 * fails)), so the prompts are not cache-warm"
+    seed=$((seed + 500000 * fails))
+  fi
+
   local conc_args=()
   [ "$c" != 0 ] && conc_args=(--max-concurrency "$c")
   local cmd=(vllm bench serve
@@ -102,6 +127,7 @@ bench() {
   settle "$tag"
   snap "$wdir/metrics/${tag}_before.txt"
   event START "$tag" "in=$in out=$outl c=$c n=$n rate=$rate seed=$seed"
+  explain "$in" "$outl" "$c" "$n" "$rate"
   "${cmd[@]}" 2>&1 | grep -v "^Namespace(" | grep -vF "$VLLM_KEY" > "$wdir/logs/$tag.log" || true
   snap "$wdir/metrics/${tag}_after.txt"
 

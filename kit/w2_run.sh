@@ -73,13 +73,36 @@ rate() {
   local s in out sid best rps n r
   for s in B A; do
     read -r in out sid <<< "${SHAPE[$s]}"
-    best=$(python3 - "$W/json" "$s" <<'EOF'
+    best=$(python3 - "$W" "$s" <<'EOF'
+# Best median req/s over the sweep points that are safe to aim at: completed runs only
+# (not *.failed.json) and no preemptions in any repeat. W2 v2 picked A's rate with a
+# failed run inside c=1024's median; c=1024 also preempted, so it is not a target.
 import glob, json, os, re, statistics, sys
-by = {}
-for f in glob.glob(os.path.join(sys.argv[1], f"{sys.argv[2]}_c*_r*.json")):
-    c = int(re.search(r"_c(\d+)_r", f).group(1))
+w, shape = sys.argv[1], sys.argv[2]
+def preempted(tag):
+    def val(path):
+        try:
+            for line in open(path):
+                if line.startswith("vllm:num_preemptions_total"):
+                    return float(line.split()[-1])
+        except OSError:
+            pass
+        return 0.0
+    m = os.path.join(w, "metrics", tag)
+    return val(m + "_after.txt") - val(m + "_before.txt") > 0
+by, bad = {}, set()
+for f in glob.glob(os.path.join(w, "json", f"{shape}_c*_r*.json")):
+    m = re.search(r"_c(\d+)_r\d+\.json$", os.path.basename(f))
+    if not m:
+        continue  # skips A_c1024_r1.failed.json and similar
+    c, tag = int(m.group(1)), os.path.basename(f)[:-5]
     by.setdefault(c, []).append(json.load(open(f))["request_throughput"])
-print(f"{max(statistics.median(v) for v in by.values()):.4f}" if by else "0")
+    if preempted(tag):
+        bad.add(c)
+ok = {c: v for c, v in by.items() if c not in bad}
+if bad:
+    print(f"excluded (preempted): c={sorted(bad)}", file=sys.stderr)
+print(f"{max(statistics.median(v) for v in ok.values()):.4f}" if ok else "0")
 EOF
 )
     if [ "$best" = "0" ]; then echo "no sweep results for $s, run sweep $s first"; return 1; fi

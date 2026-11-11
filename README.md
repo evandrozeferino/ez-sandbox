@@ -8,6 +8,11 @@ is a client result.
 
 ## Current version
 
+**v0.2, tag `week2-saturation`.** Saturation curves for the same deployment: each
+workload shape swept from low to high concurrency until throughput stops rising, the
+limit that set the knee named from the server's own metrics, and two scheduler flags
+changed one at a time to show what they trade.
+
 **v0.1, tag `week1-baseline`.** A reproducible baseline for Qwen2.5-7B-Instruct under
 vLLM 0.29.0, measured across three workload shapes. The hand run used an A100 SXM
 80GB; the scripted baseline uses an H100 SXM 80GB, the GPU for the rest of the series. W1 was run twice:
@@ -20,6 +25,9 @@ baseline. The hand run is kept, with its gaps, as the reason the lab is scripted
 docs/
   runbook-runpod-vllm.md      the June deploy runbook, superseded by kit/ and kept for history
 kit/                          runner, 0.5 s monitor and report scripts used from W1 v2 on
+w2-saturation/
+  v2/                         record, report, curves and timelines; raw data in w2/
+    lever/w2/                 the same load with the A100's scheduler defaults on the H100
 w1-baseline/
   v2/                         the baseline: scripted rerun, 3 repeats per shape, timelines
   v1-handrun-2026-09-21/
@@ -39,7 +47,7 @@ w1-baseline/
 
 ## How to boot it
 
-Follow the run sheet in `w1-baseline/v2/`, which uses the scripts in `kit/`. Generate
+The run sheets are kept outside this repo. The runners in `kit/` (`w1_run.sh`, `w2_run.sh`) list their steps in their headers and log every command they run, with timestamps, to `events.tsv` in each week's data folder. Generate
 a fresh API key per pod. Terminate the pod when finished, and check the provider's
 storage tab is empty; a stopped pod still bills its disk.
 
@@ -71,6 +79,41 @@ the workload.
 
 Full numbers for the hand run in `w1-baseline/v1-handrun-2026-09-21/baseline-record.md`,
 and for the scripted baseline in `w1-baseline/v2/`.
+
+## What W2 established
+
+Run on 10 Nov 2026 on the same H100 SXM 80GB, vLLM 0.29.0, Qwen2.5-7B-Instruct. Each
+shape was swept across a ladder of concurrencies, three repeats per point, then run at
+a fixed arrival rate of 70% of its best throughput.
+
+The decode-heavy shape (128 in / 1,024 out) gains throughput up to 256 requests in
+flight (20.9 req/s, 21,440 output tok/s) and almost nothing after: +3.6% at 512 while
+time per output token doubles. The KV cache was only 32% full at the knee, so neither
+memory nor a scheduler flag set it. At 1,024 requests in flight the cache filled when
+each request was about 900 tokens into its answer, and the server evicted and later
+recomputed about 400 requests per run. Throughput barely moved; latency doubled again.
+The server admits a request on the memory it needs now, not on the memory it will need
+by the end of its answer.
+
+The prefill-heavy shape (4,096 in / 64 out) stops gaining at 32 requests in flight
+(9.2 req/s; 10.1 at 256). The step budget caps how many run at once, about 126, with
+the cache 57% full and no evictions, but prefill compute was already used up at 32.
+Past that point more concurrency only lengthens the queue: P95 time to first token goes
+from 2.6 s to 22.5 s.
+
+Time to first token from a concurrency sweep is mostly queueing. At a fixed 15.2 req/s
+with random arrivals, the decode-heavy shape's median is 43 ms; in a burst at 256 in
+flight its P95 is 981 ms.
+
+The A100's scheduler defaults, set by hand on the H100, trade who waits without adding
+capacity. A 2,048-token step budget cut the prefill-heavy shape's P95 time per output
+token from 186 ms to 51 ms, more than doubled its mean time to first token and cost 5%
+of throughput. A sequence cap of 256 removed every eviction on the decode-heavy shape at
+1,024 in flight by queueing the rest: throughput equal to 256 in flight, P95 time to
+first token 37.7 s.
+
+Full numbers, predictions against measurements and deviations in
+`w2-saturation/v2/W2v2_Saturation_Record.md`.
 
 ## Known gaps in the hand run
 

@@ -1,0 +1,47 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+INFO 11-10 15:57:03 [utils.py:90] Sampling input_len from [128, 128] and output_len from [1024, 1024]
+Starting initial single prompt test run...
+Skipping endpoint ready check.
+Starting main benchmark run...
+Traffic request rate: inf
+Burstiness factor: 1.0 (Poisson process)
+Maximum request concurrency: 256
+  0%|          | 0/1024 [00:00<?, ?it/s]  0%|          | 1/1024 [00:11<3:22:49, 11.90s/it]  0%|          | 2/1024 [00:12<1:27:25,  5.13s/it]  9%|▉         | 95/1024 [00:12<01:01, 15.17it/s]  25%|██▌       | 257/1024 [00:23<00:53, 14.40it/s] 25%|██▌       | 259/1024 [00:24<00:55, 13.88it/s] 32%|███▏      | 328/1024 [00:24<00:31, 22.06it/s] 50%|█████     | 513/1024 [00:35<00:27, 18.33it/s] 50%|█████     | 515/1024 [00:36<00:28, 17.66it/s] 53%|█████▎    | 544/1024 [00:36<00:23, 20.36it/s] 56%|█████▌    | 573/1024 [00:36<00:18, 24.56it/s] 64%|██████▍   | 659/1024 [00:36<00:08, 42.57it/s] 75%|███████▌  | 769/1024 [00:47<00:14, 17.39it/s] 75%|███████▌  | 771/1024 [00:48<00:15, 16.65it/s] 78%|███████▊  | 798/1024 [00:48<00:11, 19.45it/s] 88%|████████▊ | 904/1024 [00:48<00:03, 38.42it/s]100%|██████████| 1024/1024 [00:48<00:00, 20.95it/s]
+tip: install termplotlib and gnuplot to plot the metrics
+============ Serving Benchmark Result ============
+Successful requests:                     1024      
+Failed requests:                         0         
+Maximum request concurrency:             256       
+Benchmark duration (s):                  48.88     
+Total input tokens:                      131072    
+Total generated tokens:                  1048576   
+Request throughput (req/s):              20.95     
+Output token throughput (tok/s):         21453.59  
+Peak output token throughput (tok/s):    25747.00  
+Peak concurrent requests:                511.00    
+Total token throughput (tok/s):          24135.29  
+---------------Time to First Token----------------
+Mean TTFT (ms):                          501.17    
+Median TTFT (ms):                        486.53    
+P50 TTFT (ms):                           486.53    
+P95 TTFT (ms):                           943.65    
+P99 TTFT (ms):                           967.08    
+-----Time per Output Token (excl. 1st token)------
+Mean TPOT (ms):                          11.43     
+Median TPOT (ms):                        11.43     
+P50 TPOT (ms):                           11.43     
+P95 TPOT (ms):                           11.68     
+P99 TPOT (ms):                           11.71     
+---------------Inter-token Latency----------------
+Mean ITL (ms):                           11.43     
+Median ITL (ms):                         10.53     
+P50 ITL (ms):                            10.53     
+P95 ITL (ms):                            15.21     
+P99 ITL (ms):                            25.15     
+----------------End-to-end Latency----------------
+Mean E2EL (ms):                          12189.31  
+Median E2EL (ms):                        12189.09  
+P50 E2EL (ms):                           12189.09  
+P95 E2EL (ms):                           12392.20  
+P99 E2EL (ms):                           12395.50  
+==================================================
